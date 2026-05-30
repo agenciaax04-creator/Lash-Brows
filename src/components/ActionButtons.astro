@@ -1,0 +1,50 @@
+---
+import WhatsAppIcon from './icons/WhatsAppIcon.astro';
+import MapPinIcon from './icons/MapPinIcon.astro';
+import CatalogIcon from './icons/CatalogIcon.astro';
+
+export type Action = {
+  label: string;
+  href: string;
+  icon: 'whatsapp' | 'catalog' | 'maps';
+  featured?: boolean;
+};
+
+export type Props = {
+  actions: Action[];
+};
+
+const { actions } = Astro.props;
+---
+
+<section class="pb-8">
+  <div class="w-full space-y-3">
+    {actions.map((action) => (
+      <a
+        href={action.href}
+        target="_blank"
+        rel="noreferrer"
+        class:list={[
+          'group relative flex w-full items-center justify-center rounded-full px-5 py-4 text-[15px] font-semibold shadow-soft ring-1 ring-black/5 transition active:scale-[0.99]',
+          'focus:outline-none focus-visible:ring-2 focus-visible:ring-rosewood/40',
+          action.featured
+            ? 'bg-rosewood text-white'
+            : 'bg-white text-charcoal hover:bg-white/90',
+        ]}
+      >
+        <span class="absolute left-5 inline-flex h-9 w-9 items-center justify-center rounded-full bg-black/0 transition group-hover:bg-black/5">
+          <span class:list={[action.featured ? 'text-white' : 'text-rosewood']}>
+            {action.icon === 'whatsapp' ? (
+              <WhatsAppIcon />
+            ) : action.icon === 'maps' ? (
+              <MapPinIcon />
+            ) : (
+              <CatalogIcon />
+            )}
+          </span>
+        </span>
+        <span class="text-center leading-none">{action.label}</span>
+      </a>
+    ))}
+  </div>
+</section>

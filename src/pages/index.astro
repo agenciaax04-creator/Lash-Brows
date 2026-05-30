@@ -1,0 +1,412 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const year = new Date().getFullYear();
+
+const services = [
+  {
+    title: 'Volumen Ruso',
+    description:
+      'Volumen elegante y definido para una mirada intensa, ligera y sofisticada.',
+    image:
+      'https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?auto=format&fit=crop&w=1600&q=70',
+    alt: 'Volumen Ruso',
+  },
+  {
+    title: 'Lifting de Pestañas',
+    description:
+      'Curvatura natural y efecto levantado para resaltar tus ojos sin esfuerzo.',
+    image:
+      'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=1600&q=70',
+    alt: 'Lifting de Pestañas',
+  },
+  {
+    title: 'Diseño de Cejas',
+    description:
+      'Diseño y armonía facial con un acabado limpio, preciso y premium.',
+    image:
+      'https://images.unsplash.com/photo-1526045478516-99145907023c?auto=format&fit=crop&w=1600&q=70',
+    alt: 'Diseño de Cejas',
+  },
+];
+
+const promoImage = {
+  src: '/gallery/efecto-mojado.jpg',
+  alt: 'Promo del mes - Efecto Mojado',
+};
+
+const gallery = [
+  {
+    src: '/gallery/trabajo-de-pestañas-1.jpg',
+    alt: 'Trabajo de pestañas 1',
+  },
+  {
+    src: '/gallery/trabajo-de-pestañas-2.jpg',
+    alt: 'Trabajo de pestañas 2',
+  },
+  {
+    src: '/gallery/trabajo-de-pestañas-3.jpg',
+    alt: 'Trabajo de pestañas 3',
+  },
+  {
+    src: '/gallery/trabajo-de-pestañas-1.jpg',
+    alt: 'Trabajo de pestañas 4',
+  },
+  {
+    src: '/gallery/trabajo-de-pestañas-2.jpg',
+    alt: 'Trabajo de pestañas 5',
+  },
+  {
+    src: '/gallery/trabajo-de-pestañas-3.jpg',
+    alt: 'Trabajo de pestañas 6',
+  },
+  {
+    src: '/gallery/trabajo-de-pestañas-1.jpg',
+    alt: 'Trabajo de pestañas 7',
+  },
+  {
+    src: '/gallery/trabajo-de-pestañas-2.jpg',
+    alt: 'Trabajo de pestañas 8',
+  },
+];
+
+const whatsappHref = 'https://wa.me/529932833607';
+const mapsHref =
+  'https://www.google.com/maps/search/?api=1&query=P.%20Usumacinta%2C%20multi%2080';
+const instagramHref =
+  'https://www.instagram.com/lashbrowss_?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==';
+const tiktokHref = 'https://www.tiktok.com/@lashbrowss_';
+
+const testimonials = [
+  {
+    name: 'Mariana López',
+    quote:
+      'Me encantó el resultado. Se ven súper naturales y el acabado es muy limpio. ¡Volveré seguro!',
+  },
+  {
+    name: 'Valeria Méndez',
+    quote:
+      'La atención es excelente y el diseño de mirada quedó perfecto para mi rostro. 10/10.',
+  },
+  {
+    name: 'Fernanda Ruiz',
+    quote:
+      'Me explicaron todo el proceso, súper higiénico y cómodo. Mis pestañas quedaron hermosas.',
+  },
+];
+
+const faqs = [
+  {
+    q: '¿Cuánto dura el servicio?',
+    a: 'Depende del diseño y tu cuidado. En general, las extensiones se recomiendan con retoque cada 2–3 semanas.',
+  },
+  {
+    q: '¿Necesito cita previa?',
+    a: 'Sí. Trabajamos por agenda para darte el tiempo y detalle que tu servicio necesita.',
+  },
+  {
+    q: '¿Qué cuidados debo tener?',
+    a: 'Evita frotar los ojos, usa productos suaves y sigue nuestras recomendaciones de limpieza para mayor duración.',
+  },
+  {
+    q: '¿Dónde se ubican?',
+    a: '📍 P. Usumacinta, multi 80. Puedes abrir la ubicación desde el botón de mapa en la página.',
+  },
+  {
+    q: '¿Puedo agendar por WhatsApp?',
+    a: 'Sí. Usa el botón “Agendar Cita” y te respondemos para confirmar tu horario.',
+  },
+];
+---
+
+<BaseLayout title="Lash Brows | Extensiones de Pestañas">
+  <header class="sticky top-0 z-50 border-b border-white/10 bg-rosewood/90 backdrop-blur">
+    <div class="max-w-7xl mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
+      <a href="#inicio" class="font-serif text-2xl font-semibold tracking-tight text-white">
+        Lash Brows
+      </a>
+
+      <div class="flex items-center gap-3">
+        <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-white/85">
+          <a href="#servicios" class="transition hover:text-white">Servicios</a>
+          <a href="#promo" class="transition hover:text-white">Promo</a>
+          <a href="#trabajo" class="transition hover:text-white">Nuestro trabajo</a>
+          <a href="#contacto" class="transition hover:text-white">Contacto</a>
+        </nav>
+
+        <a
+          href={whatsappHref}
+          target="_blank"
+          rel="noreferrer"
+          class="inline-flex items-center justify-center rounded-full bg-white px-4 py-2 text-sm font-semibold text-rosewood shadow-soft ring-1 ring-white/20 transition hover:bg-white/90 active:scale-[0.99]"
+        >
+          Agendar Cita
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="inicio" class="relative">
+      <div class="min-h-[80vh] bg-gradient-to-b from-white via-blush/40 to-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="min-h-[80vh] flex flex-col justify-center items-center text-center px-0 py-20">
+            <div class="max-w-3xl">
+              <div class="inline-flex items-center gap-2 rounded-full bg-white/80 px-4 py-2 text-xs font-semibold text-charcoal shadow-soft ring-1 ring-black/5">
+                <span aria-hidden="true">📍</span>
+                <a href={mapsHref} target="_blank" rel="noreferrer" class="hover:underline">
+                  P. Usumacinta, multi 80
+                </a>
+              </div>
+
+              <h1 class="mt-8 font-serif text-5xl font-bold tracking-tight text-charcoal sm:text-6xl lg:text-7xl">
+                Resalta tu belleza natural.
+              </h1>
+              <p class="mt-6 text-base font-medium text-charcoal/70 sm:text-lg">
+                Especialistas en extensiones de pestañas y diseño de mirada en el corazón de la ciudad.
+              </p>
+
+              <div class="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
+                <a
+                  href={whatsappHref}
+                  target="_blank"
+                  rel="noreferrer"
+                  class="inline-flex w-full items-center justify-center rounded-full bg-rosewood px-7 py-4 text-base font-semibold text-white shadow-soft ring-1 ring-black/5 transition hover:opacity-95 active:scale-[0.99] sm:w-auto"
+                >
+                  Reserva tu espacio
+                </a>
+                <a
+                  href="#trabajo"
+                  class="inline-flex w-full items-center justify-center rounded-full bg-white px-7 py-4 text-base font-semibold text-charcoal shadow-soft ring-1 ring-black/5 transition hover:bg-white/90 active:scale-[0.99] sm:w-auto"
+                >
+                  Ver nuestro trabajo
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="servicios" class="py-16 sm:py-24">
+      <div class="max-w-6xl mx-auto px-4">
+        <h2 class="text-center font-serif text-4xl font-semibold tracking-tight text-charcoal">
+          Nuestros Servicios
+        </h2>
+        <p class="mt-4 mx-auto max-w-2xl text-center text-sm font-medium text-charcoal/60 sm:text-base">
+          Técnicas actuales, acabados delicados y resultados que elevan tu mirada con un estilo limpio y lujoso.
+        </p>
+
+        <div class="mt-12 grid grid-cols-1 gap-8 md:grid-cols-3">
+          {services.map((service) => (
+            <article class="group relative overflow-hidden rounded-3xl bg-white shadow-soft ring-1 ring-rosewood/15 transition hover:ring-rosewood/25">
+              <div class="relative">
+                <img
+                  src={service.image}
+                  alt={service.alt}
+                  loading="lazy"
+                  decoding="async"
+                  class="aspect-[4/3] w-full object-cover"
+                />
+                <div aria-hidden="true" class="pointer-events-none absolute inset-0 bg-gradient-to-t from-rosewood/15 via-transparent to-transparent opacity-90" />
+              </div>
+
+              <div class="p-6">
+                <div aria-hidden="true" class="mb-4 h-px w-20 bg-gradient-to-r from-rosewood/60 to-transparent" />
+                <h3 class="font-serif text-2xl font-semibold text-charcoal">
+                  {service.title}
+                </h3>
+                <p class="mt-3 text-sm font-medium leading-relaxed text-charcoal/70">
+                  {service.description}
+                </p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section id="promo" class="bg-rose-50">
+      <div class="max-w-7xl mx-auto px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
+        <div class="grid grid-cols-1 items-center gap-10 md:grid-cols-2">
+          <div>
+            <p class="text-sm font-semibold tracking-[0.25em] text-rosewood">
+              PROMO DEL MES
+            </p>
+            <h2 class="mt-4 font-serif text-4xl font-semibold tracking-tight text-charcoal sm:text-5xl">
+              Efecto Mojado
+            </h2>
+            <p class="mt-4 text-sm font-medium text-charcoal/70 sm:text-base">
+              Extensiones con un acabado brillante y moderno para un look sofisticado y en tendencia.
+            </p>
+            <div class="mt-8 inline-flex items-baseline gap-3 rounded-3xl bg-white px-6 py-4 shadow-soft ring-1 ring-black/5">
+              <span class="text-sm font-semibold tracking-wide text-charcoal/60">Desde</span>
+              <span class="font-serif text-4xl font-bold text-rosewood">$499</span>
+            </div>
+            <div class="mt-8">
+              <a
+                href={whatsappHref}
+                target="_blank"
+                rel="noreferrer"
+                class="inline-flex items-center justify-center rounded-full bg-rosewood px-7 py-4 text-base font-semibold text-white shadow-soft ring-1 ring-black/5 transition hover:opacity-95 active:scale-[0.99]"
+              >
+                Agendar ahora
+              </a>
+            </div>
+          </div>
+
+          <div class="overflow-hidden rounded-3xl bg-white shadow-soft ring-1 ring-black/5">
+            <img
+              src={promoImage.src}
+              alt={promoImage.alt}
+              loading="lazy"
+              decoding="async"
+              referrerpolicy="no-referrer"
+              class="aspect-[4/3] w-full object-cover"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="trabajo" class="py-16 sm:py-24">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+          <div>
+            <h2 class="font-serif text-4xl font-semibold tracking-tight text-charcoal">
+              Nuestro Trabajo
+            </h2>
+            <p class="mt-3 max-w-2xl text-sm font-medium text-charcoal/60 sm:text-base">
+              Una selección de estilos, texturas y acabados pensados para resaltar lo mejor de tu rostro.
+            </p>
+          </div>
+          <a
+            href={whatsappHref}
+            target="_blank"
+            rel="noreferrer"
+            class="inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-semibold text-charcoal shadow-soft ring-1 ring-black/5 transition hover:bg-white/90 active:scale-[0.99]"
+          >
+            Cotiza por WhatsApp
+          </a>
+        </div>
+
+        <div class="mt-12 columns-2 gap-4 md:columns-3">
+          {gallery.map((img) => (
+            <div class="mb-4 break-inside-avoid overflow-hidden rounded-3xl bg-white shadow-soft ring-1 ring-black/5">
+              <img
+                src={img.src}
+                alt={img.alt}
+                loading="lazy"
+                decoding="async"
+                referrerpolicy="no-referrer"
+                class="w-full object-cover"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section id="referencias" class="py-16 sm:py-24 bg-gradient-to-b from-white via-blush/20 to-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+          <h2 class="font-serif text-4xl font-semibold tracking-tight text-charcoal">
+            Opiniones
+          </h2>
+          <p class="mt-3 mx-auto max-w-2xl text-sm font-medium text-charcoal/60 sm:text-base">
+            Referencias reales de clientes felices con su nueva mirada.
+          </p>
+        </div>
+
+        <div class="mt-12 grid grid-cols-1 gap-8 md:grid-cols-3">
+          {testimonials.map((t) => (
+            <article class="rounded-3xl bg-white p-7 shadow-soft ring-1 ring-black/5">
+              <div class="text-sm font-semibold text-rosewood">★★★★★</div>
+              <p class="mt-4 text-sm font-medium leading-relaxed text-charcoal/75">
+                “{t.quote}”
+              </p>
+              <p class="mt-5 text-sm font-semibold text-charcoal">{t.name}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section id="faq" class="py-16 sm:py-24">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+          <h2 class="font-serif text-4xl font-semibold tracking-tight text-charcoal">
+            Preguntas Frecuentes
+          </h2>
+          <p class="mt-3 mx-auto max-w-2xl text-sm font-medium text-charcoal/60 sm:text-base">
+            Respuestas rápidas para que llegues con total confianza a tu cita.
+          </p>
+        </div>
+
+        <div class="mt-12 mx-auto max-w-5xl divide-y divide-black/5 rounded-3xl bg-white shadow-soft ring-1 ring-black/5">
+          {faqs.map((item) => (
+            <details class="group px-6 py-5">
+              <summary class="cursor-pointer list-none text-sm font-semibold text-charcoal outline-none">
+                <span class="flex items-center justify-between gap-6">
+                  <span>{item.q}</span>
+                  <span class="text-rosewood transition group-open:rotate-45">+</span>
+                </span>
+              </summary>
+              <p class="mt-3 text-sm font-medium leading-relaxed text-charcoal/70">
+                {item.a}
+              </p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <footer id="contacto" class="bg-neutral-900 text-white">
+      <div class="max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 gap-12 md:grid-cols-12">
+          <div class="md:col-span-5">
+            <h3 class="font-serif text-3xl font-semibold">Lash Brows</h3>
+            <p class="mt-4 text-sm font-medium text-white/70">
+              Belleza y estilo con un enfoque premium: atención al detalle, higiene y resultados que se sienten elegantes.
+            </p>
+          </div>
+
+          <div class="md:col-span-4">
+            <h4 class="text-sm font-semibold tracking-wide text-white/80">Contacto</h4>
+            <div class="mt-4 space-y-3 text-sm font-medium">
+              <p class="text-white/70">📍 P. Usumacinta, multi 80</p>
+              <a href={whatsappHref} target="_blank" rel="noreferrer" class="block text-white/70 hover:text-white">
+                WhatsApp: 993 283 3607
+              </a>
+            </div>
+          </div>
+
+          <div class="md:col-span-3">
+            <h4 class="text-sm font-semibold tracking-wide text-white/80">Redes</h4>
+            <div class="mt-4 space-y-3 text-sm font-medium">
+              <a href={instagramHref} target="_blank" rel="noreferrer" class="block text-white/70 hover:text-white">Instagram</a>
+              <a href="#" class="block text-white/70 hover:text-white">Facebook</a>
+              <a href={tiktokHref} target="_blank" rel="noreferrer" class="block text-white/70 hover:text-white">TikTok</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-12 border-t border-white/10 pt-8 text-xs font-medium text-white/50 sm:text-sm">
+          © {year} Lash Brows. Derechos reservados. Agencia AX.
+        </div>
+      </div>
+    </footer>
+
+    <a
+      href={whatsappHref}
+      target="_blank"
+      rel="noreferrer"
+      aria-label="WhatsApp"
+      class="fixed bottom-5 left-5 z-50 inline-flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-rosewood to-[#d15b82] text-white shadow-[0_18px_45px_-22px_rgba(178,58,98,0.8)] ring-1 ring-white/20 transition hover:brightness-110 active:scale-[0.98]"
+    >
+      <svg viewBox="0 0 24 24" class="h-7 w-7" fill="currentColor" aria-hidden="true">
+        <path d="M20.52 3.48A11.86 11.86 0 0 0 12.06 0C5.46 0 .12 5.34.12 11.94c0 2.1.54 4.14 1.56 5.94L0 24l6.3-1.62a11.86 11.86 0 0 0 5.7 1.44h.06c6.6 0 11.94-5.34 11.94-11.94 0-3.18-1.26-6.18-3.48-8.4ZM12.06 21.9h-.06a9.94 9.94 0 0 1-5.1-1.41l-.36-.21-3.75.96.99-3.66-.24-.39a9.9 9.9 0 0 1-1.53-5.25C2.01 6.39 6.51 1.9 12.06 1.9a9.86 9.86 0 0 1 7.02 2.91 9.86 9.86 0 0 1 2.91 7.02c0 5.55-4.5 10.07-9.93 10.07Zm5.79-7.92c-.3-.15-1.77-.87-2.04-.96-.27-.09-.48-.15-.69.15-.21.3-.78.96-.96 1.17-.18.21-.36.24-.66.09-.3-.15-1.26-.45-2.4-1.44-.9-.78-1.5-1.74-1.68-2.04-.18-.3-.02-.45.13-.6.13-.13.3-.36.45-.54.15-.18.21-.3.3-.51.09-.21.04-.39-.02-.54-.06-.15-.69-1.65-.96-2.25-.26-.63-.53-.54-.69-.54h-.6c-.21 0-.54.09-.81.39-.27.3-1.07 1.05-1.07 2.55 0 1.5 1.1 2.94 1.25 3.15.15.21 2.16 3.3 5.22 4.62.73.32 1.3.51 1.74.66.73.24 1.4.21 1.92.13.58-.09 1.77-.72 2.01-1.41.24-.69.24-1.29.18-1.41-.06-.12-.27-.18-.57-.33Z" />
+      </svg>
+    </a>
+  </main>
+</BaseLayout>

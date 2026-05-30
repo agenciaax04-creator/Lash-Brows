@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: linear-gradient(180deg, #ffffff 0%, #fff7fa 40%, #ffffff 100%);
+  color: #1f2937;
+  font-family: Montserrat, Inter, ui-sans-serif, system-ui;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}

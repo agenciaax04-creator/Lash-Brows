@@ -1,0 +1,55 @@
+---
+export type Props = {
+  headline: string;
+  description: string;
+  price: string;
+};
+
+const { headline, description, price } = Astro.props;
+---
+
+<section class="pb-6">
+  <div class="w-full overflow-hidden rounded-3xl bg-gradient-to-br from-blush via-white to-blush shadow-soft ring-1 ring-black/5">
+    <div class="relative px-5 pt-6 pb-20">
+      <div class="flex justify-center">
+        <svg viewBox="0 0 320 90" class="h-12 w-72" aria-label={headline} role="img">
+          <defs>
+            <path id="promoArc" d="M 20 70 C 80 10, 240 10, 300 70" />
+          </defs>
+          <text fill="#b23a62" font-size="18" font-family="'Playfair Display', serif" letter-spacing="3">
+            <textPath href="#promoArc" startOffset="50%" text-anchor="middle">
+              {headline}
+            </textPath>
+          </text>
+        </svg>
+      </div>
+
+      <p class="mt-2 text-center font-serif text-2xl font-semibold text-charcoal">
+        {description}
+      </p>
+
+      <div class="mt-6 flex justify-center">
+        <div class="inline-flex items-center gap-2 rounded-2xl bg-white px-5 py-3 shadow-soft ring-1 ring-black/5">
+          <span class="text-xs font-semibold tracking-wide text-charcoal/60">DESDE</span>
+          <span class="font-serif text-3xl font-bold text-rosewood">{price}</span>
+        </div>
+      </div>
+
+      <svg
+        class="pointer-events-none absolute inset-x-0 bottom-0 h-24 w-full"
+        viewBox="0 0 600 120"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M0,64 C120,96 220,24 340,56 C430,80 520,120 600,80 L600,120 L0,120 Z"
+          fill="rgba(178, 58, 98, 0.10)"
+        />
+        <path
+          d="M0,72 C140,20 220,112 360,72 C470,40 520,16 600,56 L600,120 L0,120 Z"
+          fill="rgba(252, 228, 236, 0.75)"
+        />
+      </svg>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,28 @@
+---
+export type Props = {
+  title: string;
+  images: { src: string; alt: string }[];
+};
+
+const { title, images } = Astro.props;
+---
+
+<section class="pb-12">
+  <div class="w-full">
+    <h2 class="mb-4 font-serif text-2xl font-semibold text-charcoal">{title}</h2>
+
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+      {images.map((img) => (
+        <div class="overflow-hidden rounded-2xl bg-white shadow-soft ring-1 ring-black/5">
+          <img
+            src={img.src}
+            alt={img.alt}
+            loading="lazy"
+            decoding="async"
+            class="aspect-square w-full object-cover"
+          />
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
