@@ -1,0 +1,604 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const title = 'Lash Brows | Panel de Control';
+---
+
+<BaseLayout title={title}>
+  <main class="min-h-screen w-full bg-gradient-to-b from-[#efe7e2] via-[#f7f1ed] to-[#e9dfd8] p-4 sm:p-6">
+    <section class="mx-auto w-full max-w-5xl">
+      <header class="rounded-3xl bg-[#f3ece7] px-7 py-8 ring-1 ring-black/10 shadow-[0_30px_70px_-40px_rgba(0,0,0,0.45)] sm:px-9">
+        <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div>
+            <p class="text-xs font-semibold tracking-[0.32em] text-rosewood">ADMIN</p>
+            <h1 class="mt-2 font-serif text-3xl font-semibold tracking-tight text-charcoal">Panel de Control</h1>
+            <p class="mt-2 text-sm font-semibold text-charcoal/65">Contenido del sitio</p>
+          </div>
+          <form method="post" action="/api/admin/logout">
+            <button type="submit" class="inline-flex w-full items-center justify-center rounded-full bg-rosewood px-6 py-3 text-sm font-semibold text-white shadow-[0_18px_35px_-22px_rgba(178,58,98,0.85)] ring-1 ring-black/10 md:w-auto">
+              Cerrar Sesión
+            </button>
+          </form>
+        </div>
+      </header>
+
+      <div class="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <article class="rounded-3xl bg-white/70 p-6 ring-1 ring-black/10 shadow-soft">
+          <h2 class="font-serif text-2xl font-semibold text-charcoal">Hero</h2>
+          <p class="mt-1 text-sm font-medium text-charcoal/60">Dirección, título y subtítulo del inicio.</p>
+
+          <form id="hero-form" class="mt-5 space-y-4">
+            <div>
+              <label class="block text-sm font-semibold text-charcoal" for="hero-address">Dirección</label>
+              <input id="hero-address" name="address" class="mt-1.5 w-full rounded-2xl bg-white px-4 py-3 text-sm font-medium text-charcoal ring-1 ring-black/10 outline-none" />
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-charcoal" for="hero-title">Título</label>
+              <input id="hero-title" name="title" class="mt-1.5 w-full rounded-2xl bg-white px-4 py-3 text-sm font-medium text-charcoal ring-1 ring-black/10 outline-none" />
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-charcoal" for="hero-subtitle">Subtítulo</label>
+              <textarea id="hero-subtitle" name="subtitle" rows={3} class="mt-1.5 w-full resize-none rounded-2xl bg-white px-4 py-3 text-sm font-medium text-charcoal ring-1 ring-black/10 outline-none"></textarea>
+            </div>
+            <button type="submit" class="inline-flex w-full items-center justify-center rounded-full bg-rosewood px-6 py-3 text-sm font-semibold text-white shadow-soft ring-1 ring-black/10">Guardar</button>
+            <p id="hero-status" class="text-center text-[11px] font-semibold text-charcoal/60"></p>
+          </form>
+        </article>
+
+        <article class="rounded-3xl bg-white/70 p-6 ring-1 ring-black/10 shadow-soft">
+          <h2 class="font-serif text-2xl font-semibold text-charcoal">Promoción del mes</h2>
+          <p class="mt-1 text-sm font-medium text-charcoal/60">Título, precio, texto e imagen.</p>
+
+          <form id="promo-form" class="mt-5 space-y-4">
+            <div>
+              <label class="block text-sm font-semibold text-charcoal" for="promo-title">Título</label>
+              <input id="promo-title" name="title" class="mt-1.5 w-full rounded-2xl bg-white px-4 py-3 text-sm font-medium text-charcoal ring-1 ring-black/10 outline-none" />
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-charcoal" for="promo-price">Precio</label>
+              <input id="promo-price" name="price" class="mt-1.5 w-full rounded-2xl bg-white px-4 py-3 text-sm font-medium text-charcoal ring-1 ring-black/10 outline-none" />
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-charcoal" for="promo-description">Texto</label>
+              <textarea id="promo-description" name="description" rows={3} class="mt-1.5 w-full resize-none rounded-2xl bg-white px-4 py-3 text-sm font-medium text-charcoal ring-1 ring-black/10 outline-none"></textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-semibold text-charcoal" for="promo-image">Imagen (subir)</label>
+              <input id="promo-image" name="file" type="file" accept="image/*" class="mt-1.5 block w-full text-sm font-semibold text-charcoal/70" />
+              <input id="promo-image-url" name="image_url" type="hidden" />
+              <div class="mt-3">
+                <div class="relative inline-block">
+                  <img id="promo-image-preview" alt="Promo" class="hidden h-16 w-16 rounded-2xl object-cover ring-1 ring-black/10" loading="lazy" decoding="async" />
+                  <button id="promo-image-clear" type="button" class="hidden absolute -right-2 -top-2 inline-flex h-6 w-6 items-center justify-center rounded-full bg-white text-xs font-bold text-rosewood shadow-soft ring-1 ring-black/10">
+                    ×
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" class="inline-flex w-full items-center justify-center rounded-full bg-rosewood px-6 py-3 text-sm font-semibold text-white shadow-soft ring-1 ring-black/10">Guardar</button>
+            <p id="promo-status" class="text-center text-[11px] font-semibold text-charcoal/60"></p>
+          </form>
+        </article>
+
+        <article class="rounded-3xl bg-white/70 p-6 ring-1 ring-black/10 shadow-soft lg:col-span-2">
+          <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <h2 class="font-serif text-2xl font-semibold text-charcoal">Servicios</h2>
+              <p class="mt-1 text-sm font-medium text-charcoal/60">Nombre, precio, descripción e imagen.</p>
+            </div>
+          </div>
+
+          <form id="service-create" class="mt-6 grid grid-cols-1 gap-4 md:grid-cols-4">
+            <input name="title" class="rounded-2xl bg-white px-4 py-3 text-sm font-medium text-charcoal ring-1 ring-black/10 outline-none md:col-span-1" placeholder="Nombre" required />
+            <input name="price" class="rounded-2xl bg-white px-4 py-3 text-sm font-medium text-charcoal ring-1 ring-black/10 outline-none md:col-span-1" placeholder="Precio (opcional)" />
+            <input name="image_url" type="hidden" />
+            <button type="submit" class="rounded-full bg-rosewood px-6 py-3 text-sm font-semibold text-white shadow-soft ring-1 ring-black/10 md:col-span-2">Agregar</button>
+            <div class="md:col-span-4 grid grid-cols-1 gap-4 md:grid-cols-4">
+              <div class="md:col-span-1">
+                <label class="block text-xs font-semibold tracking-wide text-charcoal/70" for="service-image-file">Imagen (subir)</label>
+                <input id="service-image-file" name="image_file" type="file" accept="image/*" class="mt-1.5 block w-full text-sm font-semibold text-charcoal/70" />
+              </div>
+              <div class="md:col-span-3 flex items-end gap-3">
+                <div class="relative inline-block">
+                  <img id="service-create-preview" alt="Servicio" class="hidden h-14 w-14 rounded-2xl object-cover ring-1 ring-black/10" loading="lazy" decoding="async" />
+                  <button id="service-image-clear" type="button" class="hidden absolute -right-2 -top-2 inline-flex h-6 w-6 items-center justify-center rounded-full bg-white text-xs font-bold text-rosewood shadow-soft ring-1 ring-black/10">
+                    ×
+                  </button>
+                </div>
+                <p class="text-xs font-semibold text-charcoal/50">Máximo 10 servicios.</p>
+              </div>
+            </div>
+            <textarea name="description" rows={2} class="md:col-span-4 resize-none rounded-2xl bg-white px-4 py-3 text-sm font-medium text-charcoal ring-1 ring-black/10 outline-none" placeholder="Descripción" required></textarea>
+            <p id="services-status" class="md:col-span-4 text-center text-[11px] font-semibold text-charcoal/60"></p>
+          </form>
+
+          <div class="mt-6 overflow-hidden rounded-3xl ring-1 ring-black/10">
+            <div class="bg-white/70 px-5 py-3 text-xs font-semibold tracking-[0.2em] text-charcoal/60">LISTA</div>
+            <div id="services-list" class="divide-y divide-black/5 bg-white"></div>
+          </div>
+        </article>
+
+        <article class="rounded-3xl bg-white/70 p-6 ring-1 ring-black/10 shadow-soft lg:col-span-2">
+          <h2 class="font-serif text-2xl font-semibold text-charcoal">Nuestro Trabajo</h2>
+          <p class="mt-1 text-sm font-medium text-charcoal/60">Subir y ordenar fotos.</p>
+          <p class="mt-2 text-xs font-semibold text-charcoal/50">
+            Si quieres que una foto salga primero, ponle 0. La siguiente 1, luego 2, etc. Máximo 9 imágenes.
+          </p>
+
+          <form id="work-upload" class="mt-5 flex flex-col gap-4 sm:flex-row sm:items-center">
+            <input name="file" type="file" accept="image/*" class="block w-full text-sm font-semibold text-charcoal/70" required />
+            <button type="submit" class="rounded-full bg-rosewood px-6 py-3 text-sm font-semibold text-white shadow-soft ring-1 ring-black/10 sm:w-auto">Subir</button>
+          </form>
+          <p id="work-status" class="mt-3 text-center text-[11px] font-semibold text-charcoal/60"></p>
+
+          <div id="work-list" class="mt-6 grid grid-cols-2 gap-4 md:grid-cols-4"></div>
+        </article>
+
+        <article class="rounded-3xl bg-white/70 p-6 ring-1 ring-black/10 shadow-soft lg:col-span-2">
+          <h2 class="font-serif text-2xl font-semibold text-charcoal">Opiniones</h2>
+          <p class="mt-1 text-sm font-medium text-charcoal/60">Nombre, comentario y estrellas.</p>
+
+          <form id="testimonial-create" class="mt-6 grid grid-cols-1 gap-4 md:grid-cols-4">
+            <input name="name" class="rounded-2xl bg-white px-4 py-3 text-sm font-medium text-charcoal ring-1 ring-black/10 outline-none md:col-span-1" placeholder="Nombre" required />
+            <input name="stars" type="number" min="1" max="5" step="1" class="rounded-2xl bg-white px-4 py-3 text-sm font-medium text-charcoal ring-1 ring-black/10 outline-none md:col-span-1" placeholder="Estrellas (1-5)" required />
+            <button type="submit" class="rounded-full bg-rosewood px-6 py-3 text-sm font-semibold text-white shadow-soft ring-1 ring-black/10 md:col-span-2">Agregar</button>
+            <textarea name="quote" rows={2} class="md:col-span-4 resize-none rounded-2xl bg-white px-4 py-3 text-sm font-medium text-charcoal ring-1 ring-black/10 outline-none" placeholder="Comentario" required></textarea>
+            <p id="testimonials-status" class="md:col-span-4 text-center text-[11px] font-semibold text-charcoal/60"></p>
+          </form>
+
+          <div class="mt-6 overflow-hidden rounded-3xl ring-1 ring-black/10">
+            <div class="bg-white/70 px-5 py-3 text-xs font-semibold tracking-[0.2em] text-charcoal/60">LISTA</div>
+            <div id="testimonials-list" class="divide-y divide-black/5 bg-white"></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <script>
+      const api = {
+        hero: '/api/admin/content/hero',
+        promo: '/api/admin/content/promo',
+        services: '/api/admin/services',
+        work: '/api/admin/work',
+        upload: '/api/admin/upload',
+        testimonials: '/api/admin/testimonials',
+      };
+
+      async function json(url, options) {
+        const res = await fetch(url, options);
+        if (!res.ok) throw new Error(await res.text());
+        return res.status === 204 ? null : await res.json();
+      }
+
+      function setStatus(id, text) {
+        const el = document.getElementById(id);
+        if (el) el.textContent = text;
+      }
+
+      async function loadHero() {
+        const data = await json(api.hero);
+        document.getElementById('hero-address').value = data.address ?? '';
+        document.getElementById('hero-title').value = data.title ?? '';
+        document.getElementById('hero-subtitle').value = data.subtitle ?? '';
+      }
+
+      async function loadPromo() {
+        const data = await json(api.promo);
+        document.getElementById('promo-title').value = data.title ?? '';
+        document.getElementById('promo-price').value = data.price ?? '';
+        document.getElementById('promo-description').value = data.description ?? '';
+        document.getElementById('promo-image-url').value = data.image_url ?? '';
+
+        const preview = document.getElementById('promo-image-preview');
+        const clearBtn = document.getElementById('promo-image-clear');
+        if (data.image_url) {
+          preview.src = data.image_url;
+          preview.classList.remove('hidden');
+          clearBtn.classList.remove('hidden');
+        } else {
+          preview.removeAttribute('src');
+          preview.classList.add('hidden');
+          clearBtn.classList.add('hidden');
+        }
+      }
+
+      function serviceRow(service) {
+        const wrap = document.createElement('div');
+        wrap.className = 'p-5';
+
+        wrap.innerHTML = `
+          <div class="grid grid-cols-1 gap-3 md:grid-cols-8 md:items-center">
+            <div class="md:col-span-6 flex items-start gap-3">
+              <img class="service-thumb hidden h-12 w-12 rounded-2xl object-cover ring-1 ring-black/10" alt="" loading="lazy" decoding="async" />
+              <div>
+              <p class="text-sm font-semibold text-charcoal">${service.title ?? ''}</p>
+              <p class="mt-1 text-xs font-medium text-charcoal/60">${service.description ?? ''}</p>
+              </div>
+            </div>
+            <div class="md:col-span-2 flex gap-2 md:justify-end">
+              <button type="button" class="service-edit rounded-full bg-rosewood px-4 py-2 text-xs font-semibold text-white ring-1 ring-black/10">Editar</button>
+              <button type="button" class="service-del rounded-full bg-white px-4 py-2 text-xs font-semibold text-rosewood ring-1 ring-black/10">Borrar</button>
+            </div>
+          </div>
+        `;
+
+        const thumb = wrap.querySelector('.service-thumb');
+        if (service.image_url) {
+          thumb.src = service.image_url;
+          thumb.classList.remove('hidden');
+        }
+
+        const editBtn = wrap.querySelector('.service-edit');
+
+        editBtn.addEventListener('click', () => {
+          const form = document.getElementById('service-create');
+          const submitBtn = form.querySelector('button[type=submit]');
+
+          form.dataset.editingId = String(service.id);
+          submitBtn.textContent = 'Guardar cambios';
+
+          form.querySelector('[name=title]').value = service.title ?? '';
+          form.querySelector('[name=price]').value = service.price ?? '';
+          form.querySelector('[name=image_url]').value = service.image_url ?? '';
+          form.querySelector('[name=description]').value = service.description ?? '';
+
+          const preview = document.getElementById('service-create-preview');
+          const clearBtn = document.getElementById('service-image-clear');
+          if (service.image_url) {
+            preview.src = service.image_url;
+            preview.classList.remove('hidden');
+            clearBtn.classList.remove('hidden');
+          } else {
+            preview.removeAttribute('src');
+            preview.classList.add('hidden');
+            clearBtn.classList.add('hidden');
+          }
+
+          const fileInput = document.getElementById('service-image-file');
+          fileInput.value = '';
+
+          form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+
+        wrap.querySelector('.service-del').addEventListener('click', async () => {
+          if (!confirm('¿Borrar este servicio?')) return;
+          setStatus('services-status', 'Borrando...');
+          await fetch(`${api.services}/${service.id}`, { method: 'DELETE' });
+          await loadServices();
+          setStatus('services-status', 'Borrado.');
+          setTimeout(() => setStatus('services-status', ''), 1500);
+        });
+
+        return wrap;
+      }
+
+      async function loadServices() {
+        const list = document.getElementById('services-list');
+        list.innerHTML = '';
+        const data = await json(api.services);
+        for (const s of data) list.appendChild(serviceRow(s));
+      }
+
+      function testimonialRow(item) {
+        const wrap = document.createElement('div');
+        wrap.className = 'p-5';
+
+        const stars = Number.isFinite(item.stars) ? Number(item.stars) : 5;
+
+        wrap.innerHTML = `
+          <div class="grid grid-cols-1 gap-3 md:grid-cols-8 md:items-center">
+            <div class="md:col-span-3">
+              <p class="text-sm font-semibold text-charcoal">${item.name ?? ''}</p>
+              <p class="mt-1 text-xs font-medium text-charcoal/60">${'★'.repeat(Math.max(1, Math.min(5, stars)))}</p>
+            </div>
+            <textarea class="testimonial-quote md:col-span-3 resize-none rounded-2xl bg-white px-3 py-2 text-xs font-semibold text-charcoal ring-1 ring-black/10 outline-none" rows="2" placeholder="Comentario" disabled>${item.quote ?? ''}</textarea>
+            <input class="testimonial-stars md:col-span-1 rounded-2xl bg-white px-3 py-2 text-xs font-semibold text-charcoal ring-1 ring-black/10 outline-none" type="number" min="1" max="5" step="1" value="${stars}" disabled />
+            <div class="md:col-span-1 flex gap-2 md:justify-end">
+              <button type="button" class="testimonial-edit rounded-full bg-rosewood px-4 py-2 text-xs font-semibold text-white ring-1 ring-black/10">Editar</button>
+              <button type="button" class="testimonial-del rounded-full bg-white px-4 py-2 text-xs font-semibold text-rosewood ring-1 ring-black/10">Borrar</button>
+            </div>
+          </div>
+        `;
+
+        const quoteEl = wrap.querySelector('.testimonial-quote');
+        const starsEl = wrap.querySelector('.testimonial-stars');
+        const editBtn = wrap.querySelector('.testimonial-edit');
+
+        editBtn.addEventListener('click', async () => {
+          const editing = editBtn.getAttribute('data-editing') === '1';
+          if (!editing) {
+            editBtn.setAttribute('data-editing', '1');
+            editBtn.textContent = 'Guardar';
+            quoteEl.disabled = false;
+            starsEl.disabled = false;
+            return;
+          }
+
+          setStatus('testimonials-status', 'Guardando...');
+          const quote = quoteEl.value;
+          const stars = Number(starsEl.value || 5);
+          await json(`${api.testimonials}/${item.id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ quote, stars }),
+          });
+
+          editBtn.setAttribute('data-editing', '0');
+          editBtn.textContent = 'Editar';
+          quoteEl.disabled = true;
+          starsEl.disabled = true;
+          setStatus('testimonials-status', 'Guardado.');
+          setTimeout(() => setStatus('testimonials-status', ''), 1500);
+        });
+
+        wrap.querySelector('.testimonial-del').addEventListener('click', async () => {
+          if (!confirm('¿Borrar esta opinión?')) return;
+          setStatus('testimonials-status', 'Borrando...');
+          await fetch(`${api.testimonials}/${item.id}`, { method: 'DELETE' });
+          await loadTestimonials();
+          setStatus('testimonials-status', 'Borrado.');
+          setTimeout(() => setStatus('testimonials-status', ''), 1500);
+        });
+
+        return wrap;
+      }
+
+      async function loadTestimonials() {
+        const list = document.getElementById('testimonials-list');
+        if (!list) return;
+        list.innerHTML = '';
+        const data = await json(api.testimonials);
+        for (const t of data) list.appendChild(testimonialRow(t));
+      }
+
+      function workCard(item) {
+        const card = document.createElement('div');
+        card.className = 'overflow-hidden rounded-3xl bg-white ring-1 ring-black/10';
+        card.innerHTML = `
+          <img src="${item.image_url}" alt="${item.alt ?? 'Foto'}" class="aspect-square w-full object-cover" loading="lazy" decoding="async" />
+          <div class="flex items-center justify-between gap-2 p-3">
+            <div class="flex flex-col gap-1">
+              <label class="text-[10px] font-semibold tracking-wide text-charcoal/60">ORDEN</label>
+              <input type="number" min="0" max="8" step="1" aria-label="Orden" class="work-order w-24 rounded-xl bg-white px-2 py-1 text-xs font-semibold text-charcoal ring-1 ring-black/10 outline-none" value="${item.sort_order ?? 0}" />
+            </div>
+            <button type="button" class="work-del text-xs font-semibold text-rosewood underline">Borrar</button>
+          </div>
+        `;
+
+        card.querySelector('.work-del').addEventListener('click', async () => {
+          if (!confirm('¿Borrar esta foto?')) return;
+          setStatus('work-status', 'Borrando...');
+          await fetch(`${api.work}/${item.id}`, { method: 'DELETE' });
+          await loadWork();
+          setStatus('work-status', 'Listo.');
+          setTimeout(() => setStatus('work-status', ''), 1500);
+        });
+
+        return card;
+      }
+
+      async function loadWork() {
+        const list = document.getElementById('work-list');
+        list.innerHTML = '';
+        const data = await json(api.work);
+        for (const i of data) list.appendChild(workCard(i));
+
+        // Save ordering
+        list.querySelectorAll('.work-order').forEach((input, idx) => {
+          input.addEventListener('change', async () => {
+            const items = [];
+            const cards = Array.from(list.children);
+            for (const c of cards) {
+              const img = c.querySelector('img');
+              const url = img?.getAttribute('src') ?? '';
+              const found = data.find((x) => x.image_url === url);
+              if (!found) continue;
+              let sort_order = Number(c.querySelector('.work-order').value || 0);
+              if (!Number.isFinite(sort_order)) sort_order = 0;
+              sort_order = Math.max(0, Math.min(8, sort_order));
+              c.querySelector('.work-order').value = String(sort_order);
+              items.push({ id: found.id, sort_order });
+            }
+            await json(api.work, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ items }),
+            });
+          });
+        });
+      }
+
+      document.getElementById('hero-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        setStatus('hero-status', 'Guardando...');
+        const address = document.getElementById('hero-address').value;
+        const title = document.getElementById('hero-title').value;
+        const subtitle = document.getElementById('hero-subtitle').value;
+        await json(api.hero, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ address, title, subtitle }),
+        });
+        setStatus('hero-status', 'Guardado.');
+        setTimeout(() => setStatus('hero-status', ''), 1500);
+      });
+
+      document.getElementById('promo-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        setStatus('promo-status', 'Guardando...');
+
+        const fileInput = document.getElementById('promo-image');
+        const file = fileInput.files && fileInput.files[0];
+        if (file) {
+          const fd = new FormData();
+          fd.append('file', file);
+          fd.append('folder', 'promo');
+          const uploaded = await json(api.upload, { method: 'POST', body: fd });
+          document.getElementById('promo-image-url').value = uploaded.url;
+        }
+
+        const title = document.getElementById('promo-title').value;
+        const price = document.getElementById('promo-price').value;
+        const description = document.getElementById('promo-description').value;
+        const image_url = document.getElementById('promo-image-url').value;
+
+        await json(api.promo, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title, price, description, image_url }),
+        });
+
+        fileInput.value = '';
+        setStatus('promo-status', 'Guardado.');
+        setTimeout(() => setStatus('promo-status', ''), 1500);
+      });
+
+      document.getElementById('service-create').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        setStatus('services-status', 'Guardando...');
+        const form = e.currentTarget;
+        const editingId = form.dataset.editingId ? String(form.dataset.editingId) : '';
+        const title = form.querySelector('[name=title]').value;
+        const price = form.querySelector('[name=price]').value;
+        let image_url = form.querySelector('[name=image_url]').value;
+        const description = form.querySelector('[name=description]').value;
+
+        const fileInput = form.querySelector('[name=image_file]');
+        const file = fileInput.files && fileInput.files[0];
+        if (file) {
+          const fd = new FormData();
+          fd.append('file', file);
+          fd.append('folder', 'services');
+          const uploaded = await json(api.upload, { method: 'POST', body: fd });
+          image_url = uploaded.url;
+          form.querySelector('[name=image_url]').value = uploaded.url;
+        }
+        if (editingId) {
+          await json(`${api.services}/${editingId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title, price, image_url, description }),
+          });
+        } else {
+          await json(api.services, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title, price, image_url, description, sort_order: 0 }),
+          });
+        }
+
+        const preview = document.getElementById('service-create-preview');
+        const clearBtn = document.getElementById('service-image-clear');
+        preview.removeAttribute('src');
+        preview.classList.add('hidden');
+        clearBtn.classList.add('hidden');
+
+        form.reset();
+        delete form.dataset.editingId;
+        form.querySelector('button[type=submit]').textContent = 'Agregar';
+        await loadServices();
+        setStatus('services-status', 'Listo.');
+        setTimeout(() => setStatus('services-status', ''), 1500);
+      });
+
+      document.getElementById('service-image-file').addEventListener('change', (e) => {
+        const file = e.currentTarget.files && e.currentTarget.files[0];
+        const preview = document.getElementById('service-create-preview');
+        const clearBtn = document.getElementById('service-image-clear');
+        if (!file) return;
+        const url = URL.createObjectURL(file);
+        preview.src = url;
+        preview.classList.remove('hidden');
+        clearBtn.classList.remove('hidden');
+      });
+
+      document.getElementById('service-image-clear').addEventListener('click', () => {
+        const fileInput = document.getElementById('service-image-file');
+        const urlInput = document.querySelector('#service-create [name=image_url]');
+        const preview = document.getElementById('service-create-preview');
+        const clearBtn = document.getElementById('service-image-clear');
+
+        fileInput.value = '';
+        urlInput.value = '';
+        preview.removeAttribute('src');
+        preview.classList.add('hidden');
+        clearBtn.classList.add('hidden');
+      });
+
+      document.getElementById('promo-image-clear').addEventListener('click', () => {
+        const fileInput = document.getElementById('promo-image');
+        const urlInput = document.getElementById('promo-image-url');
+        const preview = document.getElementById('promo-image-preview');
+        const clearBtn = document.getElementById('promo-image-clear');
+
+        fileInput.value = '';
+        urlInput.value = '';
+        preview.removeAttribute('src');
+        preview.classList.add('hidden');
+        clearBtn.classList.add('hidden');
+      });
+
+      document.getElementById('work-upload').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        setStatus('work-status', 'Subiendo...');
+        const form = e.currentTarget;
+        const fileInput = form.querySelector('[name=file]');
+        const file = fileInput.files && fileInput.files[0];
+        if (!file) return;
+
+        const fd = new FormData();
+        fd.append('file', file);
+        fd.append('folder', 'work');
+        const uploaded = await json(api.upload, { method: 'POST', body: fd });
+
+        await json(api.work, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ image_url: uploaded.url, sort_order: 0 }),
+        });
+
+        fileInput.value = '';
+        await loadWork();
+        setStatus('work-status', 'Listo.');
+        setTimeout(() => setStatus('work-status', ''), 1500);
+      });
+
+      document.getElementById('testimonial-create').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        setStatus('testimonials-status', 'Agregando...');
+        const form = e.currentTarget;
+        const name = form.querySelector('[name=name]').value;
+        const quote = form.querySelector('[name=quote]').value;
+        const stars = Number(form.querySelector('[name=stars]').value);
+
+        await json(api.testimonials, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, quote, stars }),
+        });
+
+        form.reset();
+        await loadTestimonials();
+        setStatus('testimonials-status', 'Listo.');
+        setTimeout(() => setStatus('testimonials-status', ''), 1500);
+      });
+
+      async function safeRun(fn, statusId) {
+        try {
+          await fn();
+        } catch (err) {
+          console.error(err);
+          if (statusId) setStatus(statusId, String(err?.message ?? err));
+        }
+      }
+
+      safeRun(loadHero, 'hero-status');
+      safeRun(loadPromo, 'promo-status');
+      safeRun(loadServices, 'services-status');
+      safeRun(loadWork, 'work-status');
+      safeRun(loadTestimonials, 'testimonials-status');
+    </script>
+  </main>
+</BaseLayout>

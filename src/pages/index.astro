@@ -1,99 +1,191 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { getSupabaseServerClient } from '../lib/supabaseServer';
 
 const year = new Date().getFullYear();
 
-const services = [
+function formatMxPrice(input: string) {
+  const raw = String(input ?? '').trim();
+  if (!raw) return '';
+  const cleaned = raw.replace(/\s*mxn\s*$/i, '').trim();
+  const noDollar = cleaned.replace(/^\$/, '').trim();
+  return `$${noDollar} MXN`;
+}
+
+const fallbackServices = [
+  {
+    title: 'Pestañas Clásicas',
+    description:
+      'Una extensión por pestaña natural. Acabado discreto y elegante para el día a día.',
+    price: '',
+    image:
+      'https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?auto=format&fit=crop&w=1600&q=70',
+    alt: 'Pestañas Clásicas',
+  },
   {
     title: 'Volumen Ruso',
     description:
-      'Volumen elegante y definido para una mirada intensa, ligera y sofisticada.',
+      'Abanicos hechos a mano para una mirada con más densidad, definición y profundidad.',
+    price: '',
     image:
       'https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?auto=format&fit=crop&w=1600&q=70',
     alt: 'Volumen Ruso',
   },
   {
-    title: 'Lifting de Pestañas',
-    description:
-      'Curvatura natural y efecto levantado para resaltar tus ojos sin esfuerzo.',
-    image:
-      'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=1600&q=70',
-    alt: 'Lifting de Pestañas',
-  },
-  {
     title: 'Diseño de Cejas',
     description:
-      'Diseño y armonía facial con un acabado limpio, preciso y premium.',
+      'Perfilado, depilación y diseño personalizado según la forma de tu rostro.',
+    price: '',
     image:
-      'https://images.unsplash.com/photo-1526045478516-99145907023c?auto=format&fit=crop&w=1600&q=70',
+      'https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?auto=format&fit=crop&w=1600&q=70',
     alt: 'Diseño de Cejas',
   },
 ];
 
-const promoImage = {
-  src: '/gallery/efecto-mojado.jpg',
+let services = [];
+const fallbackHero = {
+  address: 'P. Usumacinta, multi 80',
+  title: 'Resalta tu belleza natural.',
+  subtitle: 'Especialistas en extensiones de pestañas y diseño de mirada en el corazón de la ciudad.',
+};
+
+let hero = fallbackHero;
+
+const fallbackPromo = {
+  title: 'Efecto Mojado',
+  description:
+    'Extensiones con un acabado brillante y moderno para un look sofisticado y en tendencia.',
+  price: '$499',
+  image: '/gallery/efecto-mojado.jpg',
   alt: 'Promo del mes - Efecto Mojado',
 };
 
-const gallery = [
-  {
-    src: '/gallery/trabajo-de-pestañas-1.jpg',
-    alt: 'Trabajo de pestañas 1',
-  },
-  {
-    src: '/gallery/trabajo-de-pestañas-2.jpg',
-    alt: 'Trabajo de pestañas 2',
-  },
-  {
-    src: '/gallery/trabajo-de-pestañas-3.jpg',
-    alt: 'Trabajo de pestañas 3',
-  },
-  {
-    src: '/gallery/trabajo-de-pestañas-1.jpg',
-    alt: 'Trabajo de pestañas 4',
-  },
-  {
-    src: '/gallery/trabajo-de-pestañas-2.jpg',
-    alt: 'Trabajo de pestañas 5',
-  },
-  {
-    src: '/gallery/trabajo-de-pestañas-3.jpg',
-    alt: 'Trabajo de pestañas 6',
-  },
-  {
-    src: '/gallery/trabajo-de-pestañas-1.jpg',
-    alt: 'Trabajo de pestañas 7',
-  },
-  {
-    src: '/gallery/trabajo-de-pestañas-2.jpg',
-    alt: 'Trabajo de pestañas 8',
-  },
+let promo = fallbackPromo;
+let gallery = [
+  { src: '/gallery/trabajo-de-pestañas-1.jpg', alt: 'Trabajo 1' },
+  { src: '/gallery/trabajo-de-pestañas-2.jpg', alt: 'Trabajo 2' },
+  { src: '/gallery/trabajo-de-pestañas-3.jpg', alt: 'Trabajo 3' },
 ];
 
+try {
+  const supabase = getSupabaseServerClient();
+  const { data: heroData, error: heroError } = await supabase
+    .from('hero_settings')
+    .select('*')
+    .eq('id', 1)
+    .single();
+
+  if (!heroError && heroData) {
+    hero = {
+      address: heroData.address ?? fallbackHero.address,
+      title: heroData.title ?? fallbackHero.title,
+      subtitle: heroData.subtitle ?? fallbackHero.subtitle,
+    };
+  }
+
+  const { data, error } = await supabase
+    .from('services')
+    .select('*')
+    .order('sort_order', { ascending: true })
+    .order('created_at', { ascending: true });
+
+  if (error) throw error;
+  services = (data ?? []).map((row) => ({
+    title: row.title ?? '',
+    description: row.description ?? '',
+    price: row.price ?? '',
+    image:
+      row.image_url ??
+      'https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?auto=format&fit=crop&w=1600&q=70',
+    alt: row.image_alt ?? row.title ?? 'Servicio',
+  }));
+} catch {
+  services = fallbackServices;
+}
+
+const shownServices = services.slice(0, 10);
+
+try {
+  const supabase = getSupabaseServerClient();
+  const { data, error } = await supabase.from('promo_settings').select('*').eq('id', 1).single();
+  if (!error && data) {
+    promo = {
+      title: data.title ?? fallbackPromo.title,
+      description: data.description ?? fallbackPromo.description,
+      price: data.price ?? fallbackPromo.price,
+      image: data.image_url ?? fallbackPromo.image,
+      alt: data.image_alt ?? fallbackPromo.alt,
+    };
+  }
+} catch {
+  // keep fallback promo
+}
+
+try {
+  const supabase = getSupabaseServerClient();
+  const { data, error } = await supabase
+    .from('work_photos')
+    .select('*')
+    .order('sort_order', { ascending: true })
+    .order('created_at', { ascending: true })
+    .limit(60);
+
+  if (!error && data && data.length) {
+    gallery = data.map((row, idx) => ({
+      src: row.image_url,
+      alt: row.alt ?? `Trabajo ${idx + 1}`,
+    }));
+  }
+} catch {
+  // keep fallback gallery
+}
+
 const whatsappHref = 'https://wa.me/529932833607';
-const mapsHref =
-  'https://www.google.com/maps/search/?api=1&query=P.%20Usumacinta%2C%20multi%2080';
+const mapsHref = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(hero.address)}`;
 const instagramHref =
   'https://www.instagram.com/lashbrowss_?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==';
 const tiktokHref = 'https://www.tiktok.com/@lashbrowss_';
 
-const testimonials = [
+let testimonials = [
   {
     name: 'Mariana López',
     quote:
       'Me encantó el resultado. Se ven súper naturales y el acabado es muy limpio. ¡Volveré seguro!',
+    stars: 5,
   },
   {
     name: 'Valeria Méndez',
     quote:
       'La atención es excelente y el diseño de mirada quedó perfecto para mi rostro. 10/10.',
+    stars: 5,
   },
   {
     name: 'Fernanda Ruiz',
     quote:
       'Me explicaron todo el proceso, súper higiénico y cómodo. Mis pestañas quedaron hermosas.',
+    stars: 5,
   },
 ];
+
+try {
+  const supabase = getSupabaseServerClient();
+  const { data, error } = await supabase
+    .from('testimonials')
+    .select('*')
+    .order('sort_order', { ascending: true })
+    .order('created_at', { ascending: true })
+    .limit(14);
+
+  if (!error && data && data.length) {
+    testimonials = data.map((row) => ({
+      name: row.name ?? '',
+      quote: row.quote ?? '',
+      stars: Number.isFinite(row.stars) ? Number(row.stars) : 5,
+    }));
+  }
+} catch {
+  // keep fallback testimonials
+}
 
 const faqs = [
   {
@@ -155,15 +247,15 @@ const faqs = [
               <div class="inline-flex items-center gap-2 rounded-full bg-white/80 px-4 py-2 text-xs font-semibold text-charcoal shadow-soft ring-1 ring-black/5">
                 <span aria-hidden="true">📍</span>
                 <a href={mapsHref} target="_blank" rel="noreferrer" class="hover:underline">
-                  P. Usumacinta, multi 80
+                  {hero.address}
                 </a>
               </div>
 
               <h1 class="mt-8 font-serif text-5xl font-bold tracking-tight text-charcoal sm:text-6xl lg:text-7xl">
-                Resalta tu belleza natural.
+                {hero.title}
               </h1>
               <p class="mt-6 text-base font-medium text-charcoal/70 sm:text-lg">
-                Especialistas en extensiones de pestañas y diseño de mirada en el corazón de la ciudad.
+                {hero.subtitle}
               </p>
 
               <div class="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
@@ -197,32 +289,109 @@ const faqs = [
           Técnicas actuales, acabados delicados y resultados que elevan tu mirada con un estilo limpio y lujoso.
         </p>
 
-        <div class="mt-12 grid grid-cols-1 gap-8 md:grid-cols-3">
-          {services.map((service) => (
-            <article class="group relative overflow-hidden rounded-3xl bg-white shadow-soft ring-1 ring-rosewood/15 transition hover:ring-rosewood/25">
-              <div class="relative">
-                <img
-                  src={service.image}
-                  alt={service.alt}
-                  loading="lazy"
-                  decoding="async"
-                  class="aspect-[4/3] w-full object-cover"
-                />
-                <div aria-hidden="true" class="pointer-events-none absolute inset-0 bg-gradient-to-t from-rosewood/15 via-transparent to-transparent opacity-90" />
-              </div>
+        {shownServices.length <= 3 ? (
+          <div class="mt-12 grid grid-cols-1 gap-8 md:grid-cols-3">
+            {shownServices.map((service) => (
+              <article class="group relative overflow-hidden rounded-3xl bg-white shadow-soft ring-1 ring-rosewood/15 transition hover:ring-rosewood/25">
+                <div class="relative">
+                  <img
+                    src={service.image}
+                    alt={service.alt}
+                    loading="lazy"
+                    decoding="async"
+                    class="aspect-[4/3] w-full object-cover"
+                  />
+                  <div aria-hidden="true" class="pointer-events-none absolute inset-0 bg-gradient-to-t from-rosewood/15 via-transparent to-transparent opacity-90" />
+                </div>
 
-              <div class="p-6">
-                <div aria-hidden="true" class="mb-4 h-px w-20 bg-gradient-to-r from-rosewood/60 to-transparent" />
-                <h3 class="font-serif text-2xl font-semibold text-charcoal">
-                  {service.title}
-                </h3>
-                <p class="mt-3 text-sm font-medium leading-relaxed text-charcoal/70">
-                  {service.description}
-                </p>
-              </div>
-            </article>
-          ))}
-        </div>
+                <div class="p-6">
+                  <div aria-hidden="true" class="mb-4 h-px w-20 bg-gradient-to-r from-rosewood/60 to-transparent" />
+                  <div class="flex items-baseline justify-between gap-3">
+                    <h3 class="font-serif text-2xl font-semibold text-charcoal">
+                      {service.title}
+                    </h3>
+                    {service.price ? (
+                      <span class="text-sm font-semibold text-rosewood">{formatMxPrice(service.price)}</span>
+                    ) : null}
+                  </div>
+                  <p class="mt-3 text-sm font-medium leading-relaxed text-charcoal/70">
+                    {service.description}
+                  </p>
+                </div>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <div class="mt-12 relative">
+            <button
+              type="button"
+              aria-label="Anterior"
+              class="services-prev absolute left-0 top-1/2 z-10 -translate-y-1/2 flex h-11 w-11 items-center justify-center rounded-full bg-rosewood/90 text-white shadow-soft ring-1 ring-black/10 hover:bg-rosewood"
+            >
+              <span class="block text-lg leading-none">‹</span>
+            </button>
+            <button
+              type="button"
+              aria-label="Siguiente"
+              class="services-next absolute right-0 top-1/2 z-10 -translate-y-1/2 flex h-11 w-11 items-center justify-center rounded-full bg-rosewood/90 text-white shadow-soft ring-1 ring-black/10 hover:bg-rosewood"
+            >
+              <span class="block text-lg leading-none">›</span>
+            </button>
+
+            <div class="services-carousel flex gap-6 overflow-x-auto scroll-smooth px-10 pb-2 snap-x snap-mandatory [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {shownServices.map((service) => (
+                <article class="group relative w-[280px] flex-none snap-start overflow-hidden rounded-3xl bg-white shadow-soft ring-1 ring-rosewood/15 transition hover:ring-rosewood/25">
+                  <div class="relative">
+                    <img
+                      src={service.image}
+                      alt={service.alt}
+                      loading="lazy"
+                      decoding="async"
+                      class="aspect-[4/3] w-full object-cover"
+                    />
+                    <div aria-hidden="true" class="pointer-events-none absolute inset-0 bg-gradient-to-t from-rosewood/15 via-transparent to-transparent opacity-90" />
+                  </div>
+
+                  <div class="p-6">
+                    <div aria-hidden="true" class="mb-4 h-px w-20 bg-gradient-to-r from-rosewood/60 to-transparent" />
+                    <div class="flex items-baseline justify-between gap-3">
+                      <h3 class="font-serif text-2xl font-semibold text-charcoal">
+                        {service.title}
+                      </h3>
+                      {service.price ? (
+                        <span class="text-sm font-semibold text-rosewood">{formatMxPrice(service.price)}</span>
+                      ) : null}
+                    </div>
+                    <p class="mt-3 text-sm font-medium leading-relaxed text-charcoal/70">
+                      {service.description}
+                    </p>
+                  </div>
+                </article>
+              ))}
+            </div>
+
+            <script is:inline>
+              (function () {
+                const root = document.currentScript?.closest('section');
+                if (!root) return;
+                const track = root.querySelector('.services-carousel');
+                const prev = root.querySelector('.services-prev');
+                const next = root.querySelector('.services-next');
+                if (!track || !prev || !next) return;
+
+                function step(dir) {
+                  const first = track.querySelector('article');
+                  const cardWidth = first ? first.getBoundingClientRect().width : 280;
+                  const gap = 24;
+                  track.scrollBy({ left: dir * (cardWidth + gap), behavior: 'smooth' });
+                }
+
+                prev.addEventListener('click', () => step(-1));
+                next.addEventListener('click', () => step(1));
+              })();
+            </script>
+          </div>
+        )}
       </div>
     </section>
 
@@ -234,14 +403,14 @@ const faqs = [
               PROMO DEL MES
             </p>
             <h2 class="mt-4 font-serif text-4xl font-semibold tracking-tight text-charcoal sm:text-5xl">
-              Efecto Mojado
+              {promo.title}
             </h2>
             <p class="mt-4 text-sm font-medium text-charcoal/70 sm:text-base">
-              Extensiones con un acabado brillante y moderno para un look sofisticado y en tendencia.
+              {promo.description}
             </p>
             <div class="mt-8 inline-flex items-baseline gap-3 rounded-3xl bg-white px-6 py-4 shadow-soft ring-1 ring-black/5">
               <span class="text-sm font-semibold tracking-wide text-charcoal/60">Desde</span>
-              <span class="font-serif text-4xl font-bold text-rosewood">$499</span>
+              <span class="font-serif text-4xl font-bold text-rosewood">{promo.price}</span>
             </div>
             <div class="mt-8">
               <a
@@ -257,8 +426,8 @@ const faqs = [
 
           <div class="overflow-hidden rounded-3xl bg-white shadow-soft ring-1 ring-black/5">
             <img
-              src={promoImage.src}
-              alt={promoImage.alt}
+              src={promo.image}
+              alt={promo.alt}
               loading="lazy"
               decoding="async"
               referrerpolicy="no-referrer"
@@ -318,17 +487,75 @@ const faqs = [
           </p>
         </div>
 
-        <div class="mt-12 grid grid-cols-1 gap-8 md:grid-cols-3">
-          {testimonials.map((t) => (
-            <article class="rounded-3xl bg-white p-7 shadow-soft ring-1 ring-black/5">
-              <div class="text-sm font-semibold text-rosewood">★★★★★</div>
-              <p class="mt-4 text-sm font-medium leading-relaxed text-charcoal/75">
-                “{t.quote}”
-              </p>
-              <p class="mt-5 text-sm font-semibold text-charcoal">{t.name}</p>
-            </article>
-          ))}
-        </div>
+        {testimonials.length <= 3 ? (
+          <div class="mt-12 grid grid-cols-1 gap-8 md:grid-cols-3">
+            {testimonials.map((t) => (
+              <article class="rounded-3xl bg-white p-7 shadow-soft ring-1 ring-black/5">
+                <div class="text-sm font-semibold text-rosewood">{'★'.repeat(Math.max(1, Math.min(5, Number(t.stars) || 5)))}</div>
+                <p class="mt-4 text-sm font-medium leading-relaxed text-charcoal/75">
+                  “{t.quote}”
+                </p>
+                <p class="mt-5 text-sm font-semibold text-charcoal">{t.name}</p>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <div class="mt-12 overflow-hidden">
+            <div class="testimonials-carousel flex gap-6 overflow-x-auto scroll-smooth pb-2 snap-x snap-mandatory [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {[...testimonials, ...testimonials].map((t) => (
+                <article class="w-[320px] flex-none snap-start rounded-3xl bg-white p-7 shadow-soft ring-1 ring-black/5">
+                  <div class="text-sm font-semibold text-rosewood">{'★'.repeat(Math.max(1, Math.min(5, Number(t.stars) || 5)))}</div>
+                  <p class="mt-4 text-sm font-medium leading-relaxed text-charcoal/75">
+                    “{t.quote}”
+                  </p>
+                  <p class="mt-5 text-sm font-semibold text-charcoal">{t.name}</p>
+                </article>
+              ))}
+            </div>
+
+            <script is:inline>
+              (function () {
+                const root = document.currentScript?.closest('section');
+                if (!root) return;
+                const track = root.querySelector('.testimonials-carousel');
+                if (!track) return;
+
+                let timer;
+                function normalize() {
+                  const half = track.scrollWidth / 2;
+                  if (track.scrollLeft >= half) {
+                    track.scrollLeft = track.scrollLeft - half;
+                  }
+                }
+
+                function step() {
+                  const first = track.querySelector('article');
+                  const cardWidth = first ? first.getBoundingClientRect().width : 320;
+                  const gap = 24;
+                  track.scrollBy({ left: cardWidth + gap, behavior: 'smooth' });
+                }
+
+                function start() {
+                  stop();
+                  timer = setInterval(step, 3500);
+                }
+
+                function stop() {
+                  if (timer) clearInterval(timer);
+                  timer = null;
+                }
+
+                track.addEventListener('scroll', () => {
+                  normalize();
+                });
+
+                track.addEventListener('mouseenter', stop);
+                track.addEventListener('mouseleave', start);
+                start();
+              })();
+            </script>
+          </div>
+        )}
       </div>
     </section>
 
