@@ -172,6 +172,16 @@ const title = 'Lash Brows | Panel de Control';
         return res.status === 204 ? null : await res.json();
       }
 
+      async function jsonWithTimeout(url, options, timeoutMs) {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), timeoutMs);
+        try {
+          return await json(url, { ...(options ?? {}), signal: controller.signal });
+        } finally {
+          clearTimeout(timer);
+        }
+      }
+
       function setStatus(id, text) {
         const el = document.getElementById(id);
         if (el) el.textContent = text;
@@ -427,32 +437,49 @@ const title = 'Lash Brows | Panel de Control';
 
       document.getElementById('promo-form').addEventListener('submit', async (e) => {
         e.preventDefault();
+        const form = e.currentTarget;
+        const submitBtn = form.querySelector('button[type=submit]');
+
         setStatus('promo-status', 'Guardando...');
+        submitBtn.disabled = true;
+        submitBtn.classList.add('opacity-70');
 
-        const fileInput = document.getElementById('promo-image');
-        const file = fileInput.files && fileInput.files[0];
-        if (file) {
-          const fd = new FormData();
-          fd.append('file', file);
-          fd.append('folder', 'promo');
-          const uploaded = await json(api.upload, { method: 'POST', body: fd });
-          document.getElementById('promo-image-url').value = uploaded.url;
+        try {
+          const fileInput = document.getElementById('promo-image');
+          const file = fileInput.files && fileInput.files[0];
+          if (file) {
+            const fd = new FormData();
+            fd.append('file', file);
+            fd.append('folder', 'promo');
+            const uploaded = await jsonWithTimeout(api.upload, { method: 'POST', body: fd }, 60000);
+            document.getElementById('promo-image-url').value = uploaded.url;
+          }
+
+          const title = document.getElementById('promo-title').value;
+          const price = document.getElementById('promo-price').value;
+          const description = document.getElementById('promo-description').value;
+          const image_url = document.getElementById('promo-image-url').value;
+
+          await jsonWithTimeout(
+            api.promo,
+            {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ title, price, description, image_url }),
+            },
+            30000
+          );
+
+          fileInput.value = '';
+          setStatus('promo-status', 'Guardado.');
+          setTimeout(() => setStatus('promo-status', ''), 1500);
+        } catch (err) {
+          const msg = String(err?.message ?? err);
+          setStatus('promo-status', `Error: ${msg}`);
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.classList.remove('opacity-70');
         }
-
-        const title = document.getElementById('promo-title').value;
-        const price = document.getElementById('promo-price').value;
-        const description = document.getElementById('promo-description').value;
-        const image_url = document.getElementById('promo-image-url').value;
-
-        await json(api.promo, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ title, price, description, image_url }),
-        });
-
-        fileInput.value = '';
-        setStatus('promo-status', 'Guardado.');
-        setTimeout(() => setStatus('promo-status', ''), 1500);
       });
 
       document.getElementById('service-create').addEventListener('submit', async (e) => {
