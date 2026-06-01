@@ -5,6 +5,9 @@ import tailwind from '@astrojs/tailwind';
 export default defineConfig({
   output: 'server',
   adapter: vercel(),
+  security: {
+    checkOrigin: false,
+  },
   integrations: [
     tailwind({
       applyBaseStyles: false,
