@@ -42,6 +42,8 @@ const fallbackServices = [
   },
 ];
 
+let testimonials = [];
+
 let services = [];
 const fallbackHero = {
   address: 'P. Usumacinta, multi 80',
@@ -146,7 +148,7 @@ const instagramHref =
   'https://www.instagram.com/lashbrowss_?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==';
 const tiktokHref = 'https://www.tiktok.com/@lashbrowss_';
 
-let testimonials = [
+const fallbackTestimonials = [
   {
     name: 'Mariana López',
     quote:
@@ -176,15 +178,14 @@ try {
     .order('created_at', { ascending: true })
     .limit(14);
 
-  if (!error && data && data.length) {
-    testimonials = data.map((row) => ({
-      name: row.name ?? '',
-      quote: row.quote ?? '',
-      stars: Number.isFinite(row.stars) ? Number(row.stars) : 5,
-    }));
-  }
+  if (error) throw error;
+  testimonials = (data ?? []).map((row) => ({
+    name: row.name ?? '',
+    quote: row.quote ?? '',
+    stars: Number.isFinite(row.stars) ? Number(row.stars) : 5,
+  }));
 } catch {
-  // keep fallback testimonials
+  testimonials = fallbackTestimonials;
 }
 
 const faqs = [
