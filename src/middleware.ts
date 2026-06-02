@@ -61,6 +61,10 @@ export const onRequest: MiddlewareHandler = async (context, next) => {
     return next();
   }
 
+  if (pathname === '/admin/forgot' || pathname === '/admin/reset') {
+    return next();
+  }
+
   if (pathname.startsWith('/api/')) {
     return next();
   }

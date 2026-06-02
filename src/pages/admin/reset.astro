@@ -1,0 +1,156 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const title = 'Lash Brows | Restablecer contraseña';
+
+const error = Astro.url.searchParams.get('error');
+const ok = Astro.url.searchParams.get('ok');
+const errorMessage =
+  error === 'invalid'
+    ? 'Tu enlace ya no es válido. Intenta recuperar tu contraseña de nuevo.'
+    : error === 'server'
+      ? 'Ocurrió un error. Intenta de nuevo.'
+      : '';
+---
+
+<BaseLayout title={title}>
+  <main
+    class="min-h-[100dvh] w-full grid place-items-center bg-gradient-to-b from-[#efe7e2] via-[#f7f1ed] to-[#e9dfd8] p-4 sm:p-6"
+    style="min-height: 100dvh; display: grid; place-items: center;"
+  >
+    <section aria-label="Restablecer contraseña" class="w-full max-w-md mx-auto">
+      <div class="relative aspect-square overflow-hidden rounded-3xl bg-[#f3ece7] ring-1 ring-black/10 shadow-[0_30px_70px_-40px_rgba(0,0,0,0.45)]">
+        <div class="absolute inset-0 bg-gradient-to-b from-white/85 via-white/40 to-white/15 pointer-events-none" aria-hidden="true"></div>
+
+        <div
+          class="relative flex h-full flex-col justify-center px-7 py-9 sm:px-9 sm:py-10"
+          style="height: 100%; display: flex; flex-direction: column; justify-content: center;"
+        >
+          <div class="mx-auto w-full max-w-sm">
+            <header class="text-center">
+              <p class="text-xs font-semibold tracking-[0.32em] text-rosewood">ADMIN</p>
+              <h1 class="relative mt-1.5 inline-block font-serif text-3xl font-semibold tracking-tight text-charcoal sm:text-4xl">
+                Lash Brows
+                <span
+                  aria-hidden="true"
+                  class="absolute left-1/2 -bottom-1 h-2 w-[88%] -translate-x-1/2 bg-gradient-to-r from-transparent via-[#c9a36a] to-transparent opacity-80 blur-[1px]"
+                ></span>
+              </h1>
+              <p class="mt-2 text-sm font-semibold text-charcoal/65">Restablecer contraseña</p>
+            </header>
+
+            {errorMessage ? (
+              <p class="mt-7 rounded-2xl bg-white/70 px-4 py-3 text-center text-xs font-semibold text-rosewood ring-1 ring-black/10">
+                {errorMessage}
+              </p>
+            ) : null}
+
+            {ok ? (
+              <p class="mt-7 rounded-2xl bg-white/70 px-4 py-3 text-center text-xs font-semibold text-charcoal ring-1 ring-black/10">
+                Contraseña actualizada. Ya puedes iniciar sesión.
+              </p>
+            ) : null}
+
+            <form id="reset-form" class="mt-7 space-y-4" novalidate>
+              <div>
+                <label for="password" class="block text-sm font-semibold text-charcoal">Nueva contraseña</label>
+                <div class="mt-1.5 flex items-center gap-3 rounded-2xl bg-white px-4 py-3 ring-1 ring-black/10">
+                  <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    autocomplete="new-password"
+                    placeholder="••••••••"
+                    required
+                    class="w-full bg-transparent text-sm font-medium text-charcoal outline-none placeholder:text-charcoal/40"
+                  />
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                class="mt-1 inline-flex w-full items-center justify-center rounded-full bg-rosewood px-6 py-3 text-sm font-semibold text-white shadow-[0_18px_35px_-22px_rgba(178,58,98,0.85)] ring-1 ring-black/10"
+              >
+                Guardar
+              </button>
+
+              <p id="status" class="text-center font-medium leading-snug text-charcoal/55" style="font-size: 10px;"></p>
+
+              <div class="text-center">
+                <a href="/admin" class="text-[11px] font-semibold text-rosewood underline underline-offset-4">
+                  Volver al login
+                </a>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const status = document.getElementById('status');
+
+    function getHashParams() {
+      const hash = window.location.hash || '';
+      const raw = hash.startsWith('#') ? hash.slice(1) : hash;
+      const params = new URLSearchParams(raw);
+      return params;
+    }
+
+    async function setSupabaseSessionFromHash() {
+      const params = getHashParams();
+      const access_token = params.get('access_token');
+      const refresh_token = params.get('refresh_token');
+
+      if (!access_token || !refresh_token) return false;
+
+      const res = await fetch('/api/admin/reset-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ access_token, refresh_token }),
+      });
+
+      return res.ok;
+    }
+
+    async function updatePassword(newPassword) {
+      const res = await fetch('/api/admin/update-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: newPassword }),
+      });
+
+      return res;
+    }
+
+    document.getElementById('reset-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      status.textContent = 'Guardando...';
+
+      const password = document.getElementById('password').value;
+      if (!password || password.length < 8) {
+        status.textContent = 'Usa una contraseña de al menos 8 caracteres.';
+        return;
+      }
+
+      try {
+        const ok = await setSupabaseSessionFromHash();
+        if (!ok) {
+          window.location.href = '/admin/reset?error=invalid';
+          return;
+        }
+
+        const res = await updatePassword(password);
+        if (!res.ok) {
+          window.location.href = '/admin/reset?error=server';
+          return;
+        }
+
+        window.location.href = '/admin/reset?ok=1';
+      } catch {
+        window.location.href = '/admin/reset?error=server';
+      }
+    });
+  </script>
+</BaseLayout>

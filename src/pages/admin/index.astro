@@ -13,6 +13,8 @@ const errorMessage =
     ? 'Usuario o contraseña incorrectos.'
     : error === 'config'
       ? 'Falta configurar las credenciales del administrador.'
+      : error === 'forbidden'
+        ? 'No tienes permisos para acceder a este panel.'
       : error === 'session'
         ? 'Tu sesión no pudo validarse. Intenta iniciar sesión de nuevo.'
       : '';
@@ -63,7 +65,7 @@ const errorMessage =
               ) : null}
 
             <div>
-              <label for="username" class="block text-sm font-semibold text-charcoal">Usuario</label>
+              <label for="email" class="block text-sm font-semibold text-charcoal">Email</label>
               <div class="mt-1.5 flex items-center gap-3 rounded-2xl bg-white px-4 py-3 ring-1 ring-black/10">
                 <span class="text-rosewood" aria-hidden="true">
                   <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -72,11 +74,11 @@ const errorMessage =
                   </svg>
                 </span>
                 <input
-                  id="username"
-                  name="username"
-                  type="text"
+                  id="email"
+                  name="email"
+                  type="email"
                   autocomplete="username"
-                  placeholder="Usuario"
+                  placeholder="correo@ejemplo.com"
                   required
                   class="w-full bg-transparent text-sm font-medium text-charcoal outline-none placeholder:text-charcoal/40"
                 />
@@ -111,7 +113,7 @@ const errorMessage =
                 </button>
               </div>
               <div class="mt-1.5 text-right">
-                <a href="#" class="text-[11px] font-semibold text-rosewood underline underline-offset-4">
+                <a href="/admin/forgot" class="text-[11px] font-semibold text-rosewood underline underline-offset-4">
                   He olvidado mi contraseña
                 </a>
               </div>
